@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import { Search, ShoppingCart, User, Menu, Truck, X, Leaf } from 'lucide-react';
+import { ShoppingCart, User, Menu, Truck, X, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/use-cart';
 import { LoginModal } from '@/components/auth/login-modal';
@@ -12,7 +11,6 @@ export function Navbar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const { totalItems, setIsOpen: setCartOpen } = useCart();
 
   const navLinks = [
@@ -168,41 +166,8 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* Enhanced Search Bar */}
-            <motion.div 
-              className="hidden lg:flex flex-1 max-w-md mx-8"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div className="relative w-full group">
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 pr-4 py-3 rounded-full border-2 border-border focus:border-primary transition-all duration-300 group-hover:shadow-lg backdrop-blur-sm bg-card text-foreground"
-                  data-testid="input-search"
-                />
-                <motion.div
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Search className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </motion.div>
-                {searchQuery && (
-                  <motion.div
-                    className="absolute inset-0 rounded-full border-glow opacity-50"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.5 }}
-                  />
-                )}
-              </div>
-            </motion.div>
-
             {/* Enhanced Action Buttons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -212,7 +177,7 @@ export function Navbar() {
               >
                 <Button
                   onClick={handleCartClick}
-                  className="bg-primary hover:bg-primary/80 text-background rounded-full shadow-lg relative overflow-hidden group"
+                  className="bg-primary hover:bg-primary/80 text-background rounded-full shadow-lg relative overflow-hidden group px-4 py-2 h-10"
                   style={{
                     boxShadow: '0 0 20px hsl(186, 100%, 60%)'
                   }}
@@ -220,11 +185,11 @@ export function Navbar() {
                 >
                   <span className="absolute inset-0 shimmer-effect animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   <motion.div
-                    className="flex items-center relative z-10"
+                    className="flex items-center justify-center relative z-10"
                     animate={totalItems > 0 ? { scale: [1, 1.1, 1] } : {}}
                     transition={{ duration: 0.3 }}
                   >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    <ShoppingCart className="w-4 h-4 sm:mr-2" />
                     <span className="hidden sm:inline">Cart</span>
                   </motion.div>
                   {totalItems > 0 && (
@@ -250,15 +215,15 @@ export function Navbar() {
               >
                 <Button
                   onClick={handleLoginClick}
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full shadow-lg relative overflow-hidden group"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full shadow-lg relative overflow-hidden group px-4 py-2 h-10"
                   style={{
                     boxShadow: '0 0 20px hsl(0, 85%, 67%)'
                   }}
                   data-testid="button-login"
                 >
                   <span className="absolute inset-0 shimmer-effect animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  <div className="flex items-center relative z-10">
-                    <User className="w-4 h-4 mr-2" />
+                  <div className="flex items-center justify-center relative z-10">
+                    <User className="w-4 h-4 sm:mr-2" />
                     <span className="hidden sm:inline">Login</span>
                   </div>
                 </Button>
@@ -272,7 +237,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden backdrop-blur-custom border-glow rounded-full"
+                  className="md:hidden backdrop-blur-custom border-glow rounded-full h-10 w-10"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   data-testid="button-mobile-menu"
                 >
@@ -307,21 +272,7 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                
-                {/* Mobile Search */}
-                <div className="pt-4">
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      placeholder="Search products..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                      data-testid="input-mobile-search"
-                    />
-                    <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
-                  </div>
-                </div>
+
               </div>
             </motion.div>
           )}
