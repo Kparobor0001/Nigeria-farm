@@ -84,12 +84,14 @@ var insertFavoriteSchema = createInsertSchema(favorites).omit({
 });
 
 // server/db.ts
+import dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+dotenv.config();
+console.log("DEBUG local DATABASE_URL:", process.env.DATABASE_URL);
+console.log("DEBUG => DATABASE_URL:", process.env.DATABASE_URL);
 if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?"
-  );
+  throw new Error("DATABASE_URL must be set. Did you forget to provision a database?");
 }
 var pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -612,6 +614,9 @@ function serveStatic(app2) {
 var app = express2();
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
+app.get("/", (req, res) => {
+  res.send("\u2705 NaijaMart Fresh server is running!");
+});
 app.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
@@ -650,11 +655,18 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
   const port = parseInt(process.env.PORT || "5000", 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+  const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1";
+  server.listen(
+    {
+      port,
+      host,
+      reusePort: process.env.NODE_ENV === "production"
+    },
+    () => {
+      log(`\u{1F680} serving on http://${host}:${port}`);
+    }
+  );
+})().catch((err) => {
+  console.error("Error starting server:", err);
+  process.exit(1);
+});
