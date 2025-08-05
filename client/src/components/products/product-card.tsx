@@ -31,13 +31,14 @@ export function ProductCard({ product, showSaleBadge = true }: ProductCardProps)
     toggleFavorite(product.id);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
+  const formatPrice = (price: string) => {  // Changed parameter type
+  const numPrice = parseFloat(price);
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+  }).format(numPrice);
+};
 
   return (
     <motion.div 
@@ -133,7 +134,7 @@ export function ProductCard({ product, showSaleBadge = true }: ProductCardProps)
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : ''}`} 
+                className={`w-4 h-4 ${i < Math.floor(parseFloat(product.rating)) ? 'fill-current' : ''}`} 
               />
             ))}
           </div>
@@ -148,7 +149,7 @@ export function ProductCard({ product, showSaleBadge = true }: ProductCardProps)
             <span className="text-2xl font-bold text-primary" data-testid={`text-price-${product.id}`}>
               {formatPrice(product.price)}
             </span>
-            {product.originalPrice && product.originalPrice > product.price && (
+            {product.originalPrice && parseFloat(product.originalPrice) > parseFloat(product.price) && (
               <span className="text-lg text-muted-foreground line-through ml-2">
                 {formatPrice(product.originalPrice)}
               </span>

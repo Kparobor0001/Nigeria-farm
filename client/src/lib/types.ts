@@ -2,15 +2,16 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
-  originalPrice?: number;
+  price: string;              // Changed from number to string
+  originalPrice?: string | null;  // Changed from number to string
   category: string;
   image: string;
   stock: number;
-  rating: number;
+  rating: string;             // Changed from number to string
   reviewCount: number;
   onSale: boolean;
   salePercentage: number;
+  createdAt?: string;         // Added optional field
 }
 
 export interface CartItem {
